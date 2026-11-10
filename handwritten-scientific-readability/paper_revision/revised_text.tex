@@ -1,0 +1,360 @@
+% revised_text.tex
+% Drop-in LaTeX for the revised sections. Citation keys match references.bib.
+% Uses \citep / \citet (natbib, author-year) to match the draft's APA-style
+% in-text citations. Swap to \cite if the venue template is numeric.
+% Needs: \usepackage{natbib,amsmath,booktabs,graphicx}
+%
+% Items in [SQUARE BRACKETS] are facts only the authors know. Fill them in.
+
+% ===========================================================================
+% I. INTRODUCTION, last paragraph (comments 2-4)
+% ===========================================================================
+
+This paper presents a preliminary approach to assessing handwritten scientific
+documents for machine readability before OCR transcription. The section that
+follows provides a brief background on the use of analog notebooks in labs,
+defines Computational Archival Science (CAS), and details how it relates to our
+research. Next, we state our research goals and describe the methods used to
+compute a readability score from three measurements (baseline consistency,
+spatial organization, and text fragmentation). As part of our approach, the
+score is then compared to the character error rate (CER) of an OCR
+transcription, to check whether the score tracks actual transcription error.
+Finally, we discuss research implications and future work, identify next
+steps, and present our conclusions.
+
+% ===========================================================================
+% II. BACKGROUND, citation fixes (comment 6)
+% ===========================================================================
+% "...(Marciano et al., 2018)"  ->  \citep{marciano2018archival}
+% "...(Jenkinson, 1922)"         ->  \citep{jenkinson1922manual}
+% Both were missing from the reference list and are now in references.bib.
+
+% ===========================================================================
+% IV.A DATA (comments 8-11, 38, 49, plus ground truth and OCR confidence)
+% ===========================================================================
+
+\subsection{Data}
+
+This preliminary study uses three pages: one representative page
+($1455 \times 1980$ pixels) from each of three student lab notebooks. A MOF
+researcher visually assessed the scans and grouped them by handwriting style
+as neat, average, or messy (Fig.~1).
+
+Each page was prepared (Section~IV-B) and three structural measurements were
+taken from the prepared image: baseline consistency ($b$), spatial
+organization ($s$), and text fragmentation ($f$). These were combined into a
+readability score from 0 (low readability) to 1 (high readability). To check
+whether the score reflects real transcription difficulty, each original,
+unprepared scan was also transcribed with Tesseract OCR
+\citep{smith2007tesseract, tesseract_manual} through pytesseract
+\citep{pytesseract}, and the output was scored against a ground-truth
+transcription.
+
+% --- Ground truth (checklist item 1; comment 49) ---
+The ground truth for each page is a manual transcription typed by
+[NAME / ROLE, e.g., ``the first author'' or ``a MOF researcher''], who read
+each scan and typed its text into a plain UTF-8 text file, keeping the page's
+line breaks and reading order and entering table rows as space-separated
+values [ADJUST IF NEEDED: e.g., ``chemical structure drawings were recorded by
+their labels only'']. No OCR output was used to produce the ground truth. The
+resulting references contain 997 (neat), 463 (average), and 845 (messy)
+characters.
+
+% --- CER and JiWER (checklist item 1; comment 38) ---
+CER was computed with the JiWER library \citep{jiwer} as the character-level
+edit distance (substitutions, deletions, and insertions) between the OCR
+output and the ground truth, divided by the number of characters in the
+ground truth. Case and punctuation were kept, and no other text normalization
+was applied.
+% OPTIONAL, see revision_notes.md section A.1: "Line breaks in the ground truth
+% were compared against the single spaces that join OCR words, which raises
+% CER slightly; collapsing all whitespace lowers CER by 0.2 to 2.8 points and
+% does not change the page ranking."
+
+% --- OCR confidence (checklist item 5; comments 39-40) ---
+OCR confidence is the mean of the word-level confidence values (0 to 100)
+that Tesseract reports through \texttt{pytesseract.image\_to\_data}, averaged
+over every word on the page and excluding the $-1$ placeholders Tesseract
+assigns to non-word layout entries. Tesseract [VERSION, e.g., 5.x] was run
+with its default settings (English model, automatic page segmentation).
+
+% ===========================================================================
+% IV.B IMAGE PREPARATION (comments 12-14 citations)
+% ===========================================================================
+% First paragraph: keep as is. Remove "then processed" from the Data section
+% (done above) so "preparation" is used consistently (comment 12).
+
+The first preparation stage, grayscale conversion, reduces each pixel from
+three color channels to a single intensity value, which simplifies the
+analysis when ink color is not being evaluated \citep{gonzalez2018dip}. A
+$3 \times 3$ Gaussian blur then smooths small pixel-level variations
+\citep{gonzalez2018dip, opencv_filtering}. Adaptive thresholding separates the
+handwriting from the background by computing a separate threshold for each
+pixel from a Gaussian-weighted $31 \times 31$ neighborhood (offset $C = 11$)
+\citep{opencv_misc_transforms}. Unlike global thresholding, which applies one
+threshold to the whole image, adaptive thresholding follows local changes in
+illumination, which makes it well suited to scanned documents
+\citep{sauvola2000binarization, bradley2007adaptive, binmakhashen2019layout}.
+The threshold is inverted, so ink becomes white (foreground) and paper becomes
+black (background); OpenCV's morphology and connected-component functions
+treat nonzero (white) pixels as the object being measured
+\citep{opencv_morph_tutorial, opencv_shape}.
+
+Morphological processing controls the shape and connectivity of the
+foreground regions \citep{serra1982morphology, haralick1987morphology}.
+Morphological opening (erosion followed by dilation, $3 \times 3$ square
+kernel, one pass) removes isolated foreground specks smaller than the kernel,
+which lowers the chance that image noise is counted as handwriting
+\citep{haralick1987morphology, gonzalez2018dip}. Morphological closing, the
+reverse operation (dilation followed by erosion), joins nearby foreground
+strokes \citep{haralick1987morphology}. Closing ($5 \times 5$ kernel, two
+passes) is applied only when measuring text fragmentation (Section~IV-C).
+
+% --- Fig. 2 caption (it shows script output, not image preparation) ---
+% \caption{Readability scoring output (Python 3.13) for the neat notebook
+% page: baseline angle deviation ($\sigma_\theta$), the three metric scores,
+% the combined score, and the Table~I class of each metric.}
+
+% --- Fig. 3 caption (checklist item 6; comments 15-20) ---
+% RECOMMENDED: rearrange the five panels in processing order, left to right,
+% top row then bottom row, and label them (a)-(e). Then use:
+\begin{figure}[t]
+  \centering
+  % \includegraphics[width=\linewidth]{fig3_preparation.png}
+  \caption{Image preparation for the neat notebook page.
+  (a) Grayscale conversion of the original scan.
+  (b) Adaptive thresholding (inverted) followed by morphological opening; ink
+      is white because OpenCV measures nonzero pixels as foreground.
+  (c) Canny edge map of (b), shown for illustration only; no metric uses it.
+  (d) Morphological closing of (b), which joins nearby strokes before text
+      fragmentation is measured.
+  (e) Connected components of (d), each shown in a different color.}
+  \label{fig:preparation}
+\end{figure}
+% If the panels are NOT rearranged, the current layout reads:
+% top row, left to right: (b), (d), (e); bottom row, left to right: (c), (a).
+% All arrows in the current figure point right, so "from right to left" is
+% not correct for either row.
+
+% ===========================================================================
+% IV.C READABILITY MEASUREMENTS (comments 21-33)
+% ===========================================================================
+
+\subsection{Readability Measurements}
+
+Handwritten documents vary in baseline position, inter-line spacing,
+character size, and character overlap, all of which complicate text-line
+segmentation and recognition
+\citep{papavassiliou2010segmentation, rabaev2026baseline}. After image
+preparation, three structural metrics are computed: baseline consistency
+($b$), spatial organization ($s$), and text fragmentation ($f$). Each raw
+measurement is converted to a 0--1 score by comparing it with a fixed
+reference value: the value at which the score reaches 0 (or at which a term
+reaches its maximum). Scores outside 0--1 are clipped. Higher scores always
+mean higher readability. The reference values were set by the authors'
+judgement, not derived from data, and are listed in Table~\ref{tab:reference}.
+
+\begin{itemize}
+  \item \textbf{Baseline consistency ($b$).} A horizontal projection profile
+  (the count of ink pixels in each row) locates text bands
+  \citep{likforman2007textline, papavassiliou2010segmentation}. Connected
+  components (minimum 15 pixels) are assigned to the band containing their
+  center, and bands with fewer than four components are skipped. For each
+  band, a least-squares line is fitted through the bottom-center points of the
+  components \citep{ogorman1993docstrum, opencv_shape}, and fits with a mean
+  residual above 8 pixels are rejected. The baseline angle deviation
+  $\sigma_\theta$ is the standard deviation of these line angles, weighted by
+  the number of components in each line, and
+  \[ b = 1 - \frac{\sigma_\theta}{15^\circ}. \]
+  A page whose lines all share one angle scores 1; a spread of $15^\circ$ or
+  more scores 0.
+
+  \item \textbf{Spatial organization ($s$).} Rows whose ink count exceeds 15\%
+  of the page's maximum row are grouped into bands, and the vertical distance
+  between consecutive band centers is measured
+  \citep{likforman2007textline}. With $\mathrm{Var}(d)$ the variance of these
+  spacings and $H$ the page height in pixels,
+  \[ s = 1 - \frac{\mathrm{Var}(d)}{H^2/16}. \]
+  The reference $H^2/16$ corresponds to a spacing standard deviation of one
+  quarter of the page height (495 pixels for these pages).
+
+  \item \textbf{Text fragmentation ($f$).} After morphological closing,
+  connected components smaller than 15 pixels are discarded as noise. Three
+  terms are computed, each oriented so that a larger value means more
+  fragmentation, and each limited to 0--1:
+  \begin{itemize}
+    \item component density $D = \min(40 \cdot n / A, 1)$, where $n$ is the
+    number of components and $A$ is their total ink area in pixels
+    \citep{fujisawa1992segmentation};
+    \item nearest-neighbor dispersion $N = \min(\bar{r} / \sqrt{HW}, 1)$,
+    where $\bar{r}$ is the mean distance from each component's centroid to
+    its nearest neighbor and $\sqrt{HW}$ is the square root of the page area
+    \citep{ogorman1993docstrum, clark1954nearest};
+    \item small-component ratio $R$, the share of components under 150 pixels,
+    such as broken strokes, isolated punctuation, and residual noise
+    \citep{fujisawa1992segmentation, ye2013dqa}.
+  \end{itemize}
+  These are combined into a fragmentation index and inverted, so that higher
+  $f$ means less fragmentation:
+  \[ f = 1 - (0.45\,D + 0.35\,N + 0.20\,R). \]
+  The weights (0.45, 0.35, 0.20) reflect the authors' judgement of each
+  term's likely effect on OCR; we found no published weights for these
+  terms, and this is treated as a limitation (Section~VI).
+\end{itemize}
+
+\begin{table}[t]
+  \centering
+  \caption{Reference values used to scale each measurement to 0--1. All were
+  set by judgement.}
+  \label{tab:reference}
+  \begin{tabular}{@{}lll@{}}
+    \toprule
+    Metric / term & Raw measurement & Reference value (score or term limit) \\
+    \midrule
+    $b$ & $\sigma_\theta$ (degrees) & $15^\circ$ ($b = 0$ at or above) \\
+    $s$ & Var. of band spacing (px$^2$) & $H^2/16 = 245{,}025$ px$^2$ (SD 495 px) \\
+    $f$: $D$ & components per ink pixel & $1/40$ ($D = 1$ at or above) \\
+    $f$: $N$ & mean nearest-neighbor distance (px) & $\sqrt{HW} = 1697$ px \\
+    $f$: $R$ & share of components $<150$ px & none (already a proportion) \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% ===========================================================================
+% IV.D COMBINED READABILITY SCORE (comments 30-35)
+% ===========================================================================
+
+\subsection{Combined Readability Score}
+
+The combined score is a weighted average of the three metrics,
+\[ \text{Score} = 0.40\,b + 0.20\,s + 0.40\,f. \]
+Because the weights sum to 1 and each metric lies in 0--1, the score also lies
+in 0--1. The weights reflect the authors' judgement that baseline consistency
+and fragmentation affect OCR more than line spacing does; no prior work
+supplies weights for these metrics. Each metric and the combined score are
+labelled High ($\geq 0.80$), Moderate (0.50--0.79), or Low ($< 0.50$)
+(Table~I). These cut-offs were also chosen by judgement.
+
+% Table I caption:
+% \caption{Classification bands applied to each metric and to the combined
+% score.}
+% Also fix the middle row of Table I: "0.50-0.75" -> "0.50-0.79".
+
+Finally, the readability score was compared with the CER and with OCR
+confidence using Pearson's $r$ and Spearman's $\rho$.
+
+% ===========================================================================
+% V. RESULTS  (make this its own section; comments 36-48)
+% ===========================================================================
+
+\section{Results}
+
+Table~\ref{tab:raw} lists every measurement for the three pages. All combined
+scores fell in the High band, between 0.920 and 0.924. The pages ranked in the
+same order by combined score as by CER (neat, average, messy), giving Pearson
+$r = -0.882$ and Spearman $\rho = -1.000$ (Table~II). OCR confidence was
+positively correlated with CER ($r = 0.674$; $\rho = 0.500$), and the
+correlation between the readability score and OCR confidence was
+$r = -0.247$, $\rho = -0.500$.
+
+With three pages, none of these correlations is statistically significant
+(combined score vs.\ CER: Pearson $p = 0.31$; Spearman exact two-sided
+$p = 0.33$). With $n = 3$ the smallest attainable Spearman $p$-value is 0.33,
+so these correlations describe the ranking of these three pages only and are
+not evidence of a general relationship.
+
+\begin{table}[t]
+  \centering
+  \caption{Measurements for each page. $\sigma_\theta$ and spacing SD are the
+  raw values behind $b$ and $s$. CER and OCR confidence come from Tesseract.}
+  \label{tab:raw}
+  \begin{tabular}{@{}lccc@{}}
+    \toprule
+                                   & Neat   & Average & Messy  \\
+    \midrule
+    Baseline angle SD $\sigma_\theta$ & 0.41$^\circ$ & 0.41$^\circ$ & 0.89$^\circ$ \\
+    Band spacing SD (px)           & 26.3   & 24.8    & 23.6   \\
+    Baseline consistency $b$       & 0.9729 & 0.9728  & 0.9406 \\
+    Spatial organization $s$       & 0.9972 & 0.9975  & 0.9977 \\
+    Text fragmentation $f$         & 0.8397 & 0.8350  & 0.8599 \\
+    Combined score                 & 0.9245 & 0.9226  & 0.9197 \\
+    \midrule
+    CER                            & 67.7\% & 75.6\%  & 77.2\%  \\
+    OCR confidence (0--100)        & 54.6   & 79.9    & 63.9    \\
+    Ground-truth characters        & 997    & 463     & 845     \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Baseline consistency had the widest spread of the three metrics (0.941 to
+0.973) and was the only metric that placed the messy page last. Text
+fragmentation placed the messy page first (least fragmented), and spatial
+organization varied by less than 0.001 across the pages.
+
+% ===========================================================================
+% VI. DISCUSSION  (comments 41-47; checklist item 7)
+% ===========================================================================
+
+\section{Discussion}
+
+With this research, we have started to address our goal of assessing the
+machine readability of handwritten lab notebooks before transcription. The
+readability score, computed without the OCR tool, ranked the three pages in
+the same order as their CER and as the visual assessment (Table~\ref{tab:raw}).
+
+While the score ranked the pages in the right order, every page was rated High
+readability despite CERs of 68\% to 77\%. This was our biggest surprise, as
+identifying scans that machines may be unable to read is the main use case.
+Two of the three metrics also behaved unexpectedly. Spatial organization
+barely changed across the pages (0.9972 to 0.9977). Its reference value,
+a spacing standard deviation of 495 pixels, is about twenty times larger than
+the spacing variation actually measured (24 to 26 pixels), so any plausible
+page scores close to 1. In addition, all three notebooks are written on
+printed grid paper, and the projection profile appears to detect the grid
+rows along with the handwriting (on the average page it found 64 bands spaced
+about 30 pixels apart), which makes line spacing look similar on every page.
+A reference tied to the page's own line spacing, such as the ratio of the
+spacing standard deviation to the mean spacing, together with removing the
+printed grid before measurement, should make $s$ more informative.
+
+Text fragmentation rated the messy page as the least fragmented, which
+contradicts its appearance. This is not caused by the direction of the
+formula: each term increases with fragmentation and the weighted sum is
+inverted. On the average page, the small-component ratio contributed 88\% of
+the fragmentation index (0.145 of 0.165), while component density (0.008) and
+nearest-neighbor dispersion (0.012) contributed little, because their
+reference values are again much larger than the measured values. The small
+components appear to be dominated by fragments of the printed grid, which
+thresholding and opening break into short dashes. The messy notebook's darker
+grid and hand-drawn table survive thresholding as long connected lines, which
+would produce fewer small components and therefore a higher $f$.
+[CONFIRM: run \texttt{src/metric\_components.py} on the neat and messy pages and
+replace ``appear to'' and ``would'' with the measured values.] Removing
+printed rules before measurement and recalibrating the reference values are
+therefore the first changes planned for $f$. Baseline consistency ($b$) was
+the metric most aligned with the visual assessment, ranking the messy page
+lowest.
+
+OCR confidence did not follow transcription accuracy on these pages. The
+neat page had the lowest confidence (54.6) but the lowest error (67.7\%),
+and the average page had the highest confidence (79.9) but the second-highest
+error (75.6\%). With three pages this is an observation rather than a
+finding, but it suggests that OCR confidence alone may not reflect
+transcription accuracy and should be used with care as a readability signal.
+
+This study has four limitations: small sample size, judgement-based weights,
+uncalibrated reference values, and the use of one OCR tool. First, we tested the method on three pages, one from each notebook, so
+the results cannot be generalized and this study should be seen as a first
+test of the approach. Second, the weights were set by human judgement. The page ranking is sensitive to these choices: with the
+weight on $s$ held at 0.20, the ranking matches CER only when the weight on
+$b$ is between 0.35 and 0.80, and $f$ on its own ranks the messy page as most
+readable. Third, the reference values compress all three pages into a narrow
+band near the top of the scale; calibrating them on a larger set of pages
+(for example, setting each reference at a high percentile of the observed
+values) is needed before the High, Moderate, and Low labels are meaningful.
+Lastly, Tesseract produced high error rates on every page, including the page
+judged neat both visually and by the score, so future work should compare
+several transcription tools.
+
+% Section numbering: Results V, Discussion VI, Conclusion VII
+% (the draft has both Discussion and Conclusion as "V").
