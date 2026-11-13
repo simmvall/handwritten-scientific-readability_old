@@ -2,47 +2,37 @@
 % A Computational Readability Evaluation for Assessing AI Transcription
 % Readiness of Physical Documents
 %
+% IEEE conference format (IEEEtran), numbered IEEE-style citations.
 % Overleaf: upload main.tex, references.bib, and the figures/ folder.
-% Compiler: pdfLaTeX. Bibliography: BibTeX (natbib + apalike, author-year).
-% If the venue requires its own template (e.g., IEEEtran), copy the body
-% between \begin{document} and \end{document} into it and switch the
-% citation style to the venue's.
+% Compiler: pdfLaTeX. Bibliography: BibTeX with IEEEtran.bst (built into
+% Overleaf). If you prefer a hand-written reference list, delete the two
+% \bibliography lines at the end and paste in references_ieee.tex instead.
 %
 % Red [bracketed] text marks facts only the authors can supply. Search for
 % \todo to find them all before submitting.
 % =============================================================================
-\documentclass[11pt]{article}
+\documentclass[conference]{IEEEtran}
 
-\usepackage[margin=1in]{geometry}
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage{mathptmx}
+\usepackage{cite}
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{booktabs}
-\usepackage{caption}
-\usepackage{subcaption}
 \usepackage[table]{xcolor}
-\usepackage[round,sort]{natbib}
-\usepackage[hidelinks]{hyperref}
+\usepackage[caption=false,font=footnotesize]{subfig}
+\usepackage{url}
 
 \graphicspath{{figures/}}
 
-% Roman-numeral sections, lettered subsections (IEEE-like headings).
-\renewcommand{\thesection}{\Roman{section}}
-\renewcommand{\thesubsection}{\Alph{subsection}}
-\renewcommand{\thetable}{\Roman{table}}
-\captionsetup{labelsep=period,font=small}
-\captionsetup[table]{name=Table}
-
 \newcommand{\todo}[1]{\textcolor{red}{[#1]}}
+
+\begin{document}
 
 \title{A Computational Readability Evaluation for Assessing AI Transcription
 Readiness of Physical Documents}
-\author{\todo{Authors and affiliations}}
-\date{}
 
-\begin{document}
+\author{\IEEEauthorblockN{\todo{Authors}}
+\IEEEauthorblockA{\todo{Affiliations and emails}}}
+
 \maketitle
 
 % =============================================================================
@@ -83,9 +73,9 @@ analysis, it must first be digitized. Converting these lab notebooks or other
 handwritten documents into digital transcriptions depends on the application of
 optical character recognition (OCR) tools to scanned copies of the lab
 notebooks' pages. The accuracy of these tools, however, depends partly on the
-quality of the input provided \citep{ye2013dqa, alaei2024dqa}. Preprocessing
+quality of the input provided \cite{ye2013, alaei2024}. Preprocessing
 scans of handwritten documents can improve input quality and make a document
-more machine-readable \citep{sauvola2000binarization, gonzalez2018dip}, but is
+more machine-readable \cite{sauvola2000, gonzalez2018}, but is
 an expensive process in computing time and effort for large collections
 \todo{citation needed, or rephrase as the authors' observation}. Because there
 is no simple way to determine which scans may require preprocessing, assessing
@@ -100,7 +90,7 @@ Institute for Data-Driven Dynamical Design in conjunction with the Metadata
 Research Center at Drexel University. Earlier work using MOF students' lab
 notebooks returned table-cell error rates of 4\% to 18\%, depending on the OCR
 tool used for transcription and the correction steps taken
-\citep{pepper2025analog}, and these results support checking scan quality
+\cite{pepper2025}, and these results support checking scan quality
 before transcription.
 
 This paper presents a preliminary approach to assessing handwritten scientific
@@ -120,9 +110,9 @@ steps, and present our conclusions.
 
 Low barrier to adoption and use, reasonable cost, and portability are the
 principal reasons why scientists use physical lab notebooks in wet labs instead
-of electronic ones \citep{kanza2017eln}. In addition to these advantages,
+of electronic ones \cite{kanza2017}. In addition to these advantages,
 handwritten historical documents and modern physical records do not depend on
-software and can outlast rapidly evolving technology \citep{ryan2007preserving}.
+software and can outlast rapidly evolving technology \cite{ryan2007}.
 However, to be shared, reproduced, and analyzed, physical lab notebooks and
 other handwritten documents must be digitally transcribed. Transcription at
 scale requires a reliable transcription pipeline so that the data remain
@@ -132,14 +122,14 @@ accurate and the processing time reasonable.
 Computational Archival Science (CAS) addresses the need for the efficient and
 reliable processing of records by combining archival science, computer science,
 and subject expertise to develop scalable and automated methods for management
-\citep{marciano2018archival}. A lab notebook can be defined as an archival
+\cite{marciano2018}. A lab notebook can be defined as an archival
 record since it documents the steps, observations, and results of an
 experiment. This observation draws from foundational archival theory, which
 holds that a record's meaning depends on its provenance (the context in which
 it was created) and its original order (the sequence in which it was kept)
-\citep{jenkinson1922manual}. CAS principles call for archival records such as
+\cite{jenkinson1922}. CAS principles call for archival records such as
 these to remain reliable and authentic, as well as connected to their original
-context, when converted to digital form \citep{hedges2022cas}. Our proposed
+context, when converted to digital form \cite{hedges2022}. Our proposed
 readability score aims to support reliability by identifying which scans
 require further processing. This allows the visual quality of the scans to be
 improved before transcription, which makes the output more accurate and keeps
@@ -173,10 +163,10 @@ for quantifying structural characteristics, to determine whether the measurable
 visual properties of laboratory notebook pages can predict OCR transcription
 performance without using the OCR tool itself. The methodology was informed by
 research on the variability of handwriting
-\citep{papavassiliou2010segmentation, rabaev2026baseline}, prior work on
-scientific document recognition \citep{pepper2025analog}, document image
-quality \citep{ye2013dqa, alaei2024dqa}, and OCR evaluation
-\citep{smith2007tesseract, levenshtein1966binary}. These areas guided the
+\cite{papavassiliou2010, rabaev2026}, prior work on
+scientific document recognition \cite{pepper2025}, document image
+quality \cite{ye2013, alaei2024}, and OCR evaluation
+\cite{smith2007, levenshtein1966}. These areas guided the
 selection of structural features and validation metrics.
 
 \subsection{Data}
@@ -187,14 +177,14 @@ This preliminary study uses three pages: one representative page
 researcher visually assessed the notebook scans and grouped them by handwriting
 style as neat, average, or messy (Fig.~\ref{fig:styles}).
 
-\begin{figure}[t]
+\begin{figure*}[t]
   \centering
-  \includegraphics[width=\linewidth]{fig1_handwriting_styles.png}
+  \includegraphics[width=0.85\textwidth]{fig1_handwriting_styles.png}
   \caption{Neat, average, and messy handwriting styles (left to right) from
   students' chemistry lab notebooks from Dr.\ Fernando Uribe-Romo's lab at the
   University of Central Florida.}
   \label{fig:styles}
-\end{figure}
+\end{figure*}
 
 Each page was prepared (Section~\ref{sec:methods}-\ref{sec:prep}) using
 grayscale conversion, adaptive thresholding, and morphological opening. Three
@@ -202,18 +192,18 @@ structural measurements were taken from the prepared image: baseline
 consistency ($b$), spatial organization ($s$), and text fragmentation ($f$).
 These were combined into a readability score using a weighted formula,
 resulting in a value from 0 (low readability) to 1 (high readability). All
-image processing used Python 3.13 and OpenCV \citep{bradski2000opencv}.
+image processing used Python 3.13 and OpenCV \cite{bradski2000}.
 
 To test whether higher readability scores coincide with lower transcription
 error, each original, unprepared scan was transcribed with Tesseract OCR
-\todo{version} \citep{smith2007tesseract, tesseract_manual} through the
-pytesseract library \citep{pytesseract}, using default settings (English
+\todo{version} \cite{smith2007, tesseract_manual} through the
+pytesseract library \cite{pytesseract}, using default settings (English
 model, automatic page segmentation). The ground truth for each page is a
 manual transcription typed by the authors, who entered the text of each scan
 into a plain UTF-8 text file, keeping the page's line breaks and reading order;
 no OCR output was used to create it. CER was computed with the JiWER library
-\citep{jiwer} as the number of character substitutions, deletions, and
-insertions \citep{levenshtein1966binary} needed to turn the OCR output into the
+\cite{jiwer} as the number of character substitutions, deletions, and
+insertions \cite{levenshtein1966} needed to turn the OCR output into the
 ground truth, divided by the number of ground-truth characters (997, 463, and
 845 for the neat, average, and messy pages). Case and punctuation were kept,
 and no other text normalization was applied.
@@ -236,20 +226,20 @@ distinguish between handwritten text and the surrounding document image.
 Inconsistencies such as background shadows, uneven illumination of the scanned
 page, page texture, and isolated image noise can be mistaken for handwriting
 and hinder the detection of actual handwritten characters
-\citep{smith2007tesseract}. For example, a faint decimal point can be lost
+\cite{smith2007}. For example, a faint decimal point can be lost
 during thresholding, while disconnected strokes can cause a single character to
 be represented as several separate components in the image
-\citep{fujisawa1992segmentation}. Similarly, adjacent characters can merge into
+\cite{fujisawa1992}. Similarly, adjacent characters can merge into
 one foreground region, making segmentation more difficult. Errors such as these
 can propagate through the OCR transcription pipeline and raise the error rate
-of the final transcription. Following \citet{alaei2024dqa}, we treat document
+of the final transcription. Following Alaei \emph{et al.} \cite{alaei2024}, we treat document
 image quality as affecting both structural feature extraction and OCR
 performance. Image preparation removes this noise so that it does not distort
 the final readability score.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.75\linewidth]{fig2_script_output.png}
+  \includegraphics[width=\columnwidth]{fig2_script_output.png}
   \caption{Readability scoring output (Python 3.13) for the neat notebook page:
   baseline angle deviation ($\sigma_\theta$), the three metric scores, the
   combined score, and the class of each metric from Table~\ref{tab:bands}.}
@@ -258,12 +248,12 @@ the final readability score.
 
 The first preparation stage, grayscale conversion, reduces each pixel from
 three color channels to a single intensity value, which simplifies the analysis
-when ink color is not being evaluated \citep{gonzalez2018dip}. Before
+when ink color is not being evaluated \cite{gonzalez2018}. Before
 thresholding, a $3 \times 3$ Gaussian blur smooths small pixel-level variations
-\citep{gonzalez2018dip, opencv_filtering}. Adaptive thresholding then separates
+\cite{gonzalez2018, opencv_filtering}. Adaptive thresholding then separates
 the handwriting from the background by computing a separate threshold for each
 pixel from a Gaussian-weighted $31 \times 31$ pixel neighborhood with an offset
-of 11 gray levels \citep{opencv_misc_transforms}: a pixel is treated as ink if
+of 11 gray levels \cite{opencv_misc}: a pixel is treated as ink if
 it is at least 11 levels darker than the weighted average of the area around
 it. These two settings were chosen by visual inspection of the thresholded
 output, and they affect the resulting scores (Section~\ref{sec:discussion}).
@@ -271,66 +261,49 @@ output, and they affect the resulting scores (Section~\ref{sec:discussion}).
 Unlike global thresholding, which applies one threshold across the entire
 image, adaptive thresholding responds to local variations in illumination,
 which is particularly useful for scanned documents
-\citep{sauvola2000binarization, bradley2007adaptive, binmakhashen2019layout}.
+\cite{sauvola2000, bradley2007, binmakhashen2019}.
 The threshold is inverted, so ink becomes white (foreground) and paper becomes
 black (background), because OpenCV's morphology and connected-component
 functions treat nonzero (white) pixels as the object being measured
-\citep{opencv_morph_tutorial, opencv_shape}.
+\cite{opencv_morph, opencv_shape}.
 
 Morphological processing provides an additional means of controlling the shape
 and connectivity of foreground regions
-\citep{serra1982morphology, haralick1987morphology}. Morphological opening,
+\cite{serra1982, haralick1987}. Morphological opening,
 erosion followed by dilation, removes isolated foreground specks smaller than
 its kernel ($3 \times 3$, one pass), which reduces the likelihood that image
 noise will be interpreted as handwriting later in the analysis
-\citep{haralick1987morphology, gonzalez2018dip}. Conversely, morphological
+\cite{haralick1987, gonzalez2018}. Conversely, morphological
 closing, dilation followed by erosion, reconnects nearby foreground strokes
-\citep{haralick1987morphology, gonzalez2018dip}. Closing ($5 \times 5$ kernel,
+\cite{haralick1987, gonzalez2018}. Closing ($5 \times 5$ kernel,
 two passes) is applied only when measuring text fragmentation
 (Section~\ref{sec:methods}-\ref{sec:measure}).
 
-\begin{figure}[t]
+\begin{figure*}[t]
   \centering
-  \begin{subfigure}[b]{0.32\linewidth}
-    \includegraphics[width=\linewidth]{fig3a_grayscale.png}
-    \caption{}
-  \end{subfigure}\hfill
-  \begin{subfigure}[b]{0.32\linewidth}
-    \includegraphics[width=\linewidth]{fig3b_threshold_opening.png}
-    \caption{}
-  \end{subfigure}\hfill
-  \begin{subfigure}[b]{0.32\linewidth}
-    \includegraphics[width=\linewidth]{fig3c_canny_edges.png}
-    \caption{}
-  \end{subfigure}
-
-  \medskip
-  \begin{subfigure}[b]{0.32\linewidth}
-    \includegraphics[width=\linewidth]{fig3d_closing.png}
-    \caption{}
-  \end{subfigure}\hspace{0.02\linewidth}
-  \begin{subfigure}[b]{0.32\linewidth}
-    \includegraphics[width=\linewidth]{fig3e_components.png}
-    \caption{}
-  \end{subfigure}
+  \subfloat[]{\includegraphics[width=0.19\textwidth]{fig3a_grayscale.png}}\hfill
+  \subfloat[]{\includegraphics[width=0.19\textwidth]{fig3b_threshold_opening.png}}\hfill
+  \subfloat[]{\includegraphics[width=0.19\textwidth]{fig3c_canny_edges.png}}\hfill
+  \subfloat[]{\includegraphics[width=0.19\textwidth]{fig3d_closing.png}}\hfill
+  \subfloat[]{\includegraphics[width=0.19\textwidth]{fig3e_components.png}}
   \caption{Image preparation for the neat notebook page, in processing order.
   (a) Grayscale conversion of the original scan.
   (b) Adaptive thresholding (inverted) followed by morphological opening; ink is
   white because OpenCV measures nonzero pixels as foreground.
-  (c) Canny edge map of (b) \citep{canny1986edge}, shown for illustration only;
+  (c) Canny edge map of (b) \cite{canny1986}, shown for illustration only;
   no metric uses it.
   (d) Morphological closing of (b), which joins nearby strokes before text
   fragmentation is measured.
   (e) Connected components of (d), each shown in a different color.}
   \label{fig:prep}
-\end{figure}
+\end{figure*}
 
 \subsection{Readability Measurements}
 \label{sec:measure}
 
 Handwritten documents inherently vary in baseline position, inter-line spacing,
 character size, and character overlap, which complicate text-line segmentation
-and recognition \citep{papavassiliou2010segmentation, rabaev2026baseline}.
+and recognition \cite{papavassiliou2010, rabaev2026}.
 Following image preparation, three structural metrics are computed: baseline
 consistency ($b$), spatial organization ($s$), and text fragmentation ($f$).
 
@@ -345,11 +318,11 @@ Table~\ref{tab:reference}.
 \begin{itemize}
   \item \textbf{Baseline consistency ($b$).} A horizontal projection profile
   (the count of ink pixels in each row) locates the bands of text on the page
-  \citep{likforman2007textline, papavassiliou2010segmentation}. Connected
+  \cite{likforman2007, papavassiliou2010}. Connected
   components of at least 15 pixels are assigned to the band containing their
   center, and bands with fewer than four components are skipped. For each
   band, a least-squares line is fitted through the bottom-center points of its
-  components \citep{ogorman1993docstrum, opencv_shape}; fits whose points lie
+  components \cite{ogorman1993, opencv_shape}; fits whose points lie
   more than 8 pixels from the line on average are rejected. The baseline angle
   deviation $\sigma_\theta$ is the standard deviation of the fitted line
   angles, weighted by the number of components in each line, and
@@ -360,7 +333,7 @@ Table~\ref{tab:reference}.
   \item \textbf{Spatial organization ($s$).} Rows whose ink count exceeds 15\%
   of the page's fullest row are grouped into bands, and the vertical distance
   between the centers of consecutive bands is measured
-  \citep{likforman2007textline}. With $\mathrm{Var}(d)$ the variance of these
+  \cite{likforman2007}. With $\mathrm{Var}(d)$ the variance of these
   spacings and $H$ the page height in pixels,
   \[ s = 1 - \frac{\mathrm{Var}(d)}{H^2/16}. \]
   The reference $H^2/16$ corresponds to a spacing standard deviation of one
@@ -374,15 +347,15 @@ Table~\ref{tab:reference}.
   \begin{itemize}
     \item component density $D = \min(40\,n/A,\ 1)$, where $n$ is the number
     of components and $A$ is their total ink area in pixels
-    \citep{fujisawa1992segmentation};
+    \cite{fujisawa1992};
     \item nearest-neighbor dispersion $N = \min(\bar{r}/\sqrt{HW},\ 1)$, where
     $\bar{r}$ is the mean distance from each component's centroid to its
     nearest neighbor and $\sqrt{HW}$ is the square root of the page area; larger
     distances suggest more scattered text
-    \citep{ogorman1993docstrum, clark1954nearest};
+    \cite{ogorman1993, clark1954};
     \item small-component ratio $R$, the share of components under 150 pixels,
     such as broken strokes, isolated punctuation, and residual noise
-    \citep{fujisawa1992segmentation, ye2013dqa}.
+    \cite{fujisawa1992, ye2013}.
   \end{itemize}
   The terms are combined into a fragmentation index, which is subtracted from 1
   so that higher $f$ means less fragmentation and higher readability:
@@ -393,7 +366,7 @@ Table~\ref{tab:reference}.
   interpreted as a fully validated measure of readability.
 \end{itemize}
 
-\begin{table}[t]
+\begin{table*}[t]
   \centering
   \caption{Reference values used to scale each raw measurement to 0--1. All
   were chosen by the authors' judgement.}
@@ -410,7 +383,7 @@ Table~\ref{tab:reference}.
     $f$: $R$  & Share of components $< 150$ px     & None (already a proportion) \\
     \bottomrule
   \end{tabular}
-\end{table}
+\end{table*}
 
 \subsection{Combined Readability Score}
 \label{sec:combined}
@@ -431,16 +404,16 @@ by the authors' judgement.
   score.}
   \label{tab:bands}
   \small
-  \begin{tabular}{@{}lllll@{}}
+  \begin{tabular}{@{}lll@{}}
     \toprule
-    Score & $b$ & $s$ & $f$ & Combined \\
+    Score & $b$, $s$, and combined & $f$ \\
     \midrule
     \rowcolor{green!15}
-    0.80--1.00 & High     & High     & Low fragmentation      & High \\
+    0.80--1.00 & High     & Low fragmentation \\
     \rowcolor{yellow!20}
-    0.50--0.79 & Moderate & Moderate & Moderate fragmentation & Moderate \\
+    0.50--0.79 & Moderate & Moderate fragmentation \\
     \rowcolor{red!12}
-    0.00--0.49 & Low      & Low      & High fragmentation     & Low \\
+    0.00--0.49 & Low      & High fragmentation \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -461,7 +434,7 @@ Spearman $\rho = -1.000$; Table~\ref{tab:corr}). OCR confidence had a positive
 correlation with CER ($r = 0.674$; $\rho = 0.500$), and the correlation between
 the readability score and OCR confidence was $r = -0.247$, $\rho = -0.500$.
 
-\begin{table}[t]
+\begin{table*}[t]
   \centering
   \caption{Readability metrics, CER, and OCR confidence for each page.}
   \label{tab:raw}
@@ -475,7 +448,7 @@ the readability score and OCR confidence was $r = -0.247$, $\rho = -0.500$.
     Messy   & 0.9406 & 0.9977 & 0.8599 & 0.9197 & 77.2\% & 63.9 \\
     \bottomrule
   \end{tabular}
-\end{table}
+\end{table*}
 
 \begin{table}[t]
   \centering
@@ -590,7 +563,7 @@ little; and (4) compare several OCR tools.
 
 This work makes progress toward quantifying notebook and handwriting quality, a
 step that our earlier work identified as necessary for making analog lab
-notebooks more AI-ready \citep{pepper2025analog}. With a readability check that
+notebooks more AI-ready \cite{pepper2025}. With a readability check that
 could reliably predict transcription accuracy before OCR, notebooks that have
 never been transcribed could be selected for transcription pipelines or
 identified for further preprocessing. Digital transcription enables physical
@@ -600,7 +573,7 @@ transcriptions may aid in training future tools and inform future physical
 documentation practices.
 
 % =============================================================================
-\section*{Acknowledgments}
+\section*{Acknowledgment}
 
 This work was supported by the National Science Foundation through the
 Institute for Data-Driven Dynamical Design, OAC-2118201, and the Drexel
@@ -608,7 +581,7 @@ University Metadata Research Center. We acknowledge the original authors of the
 lab notebooks, Alyssa Bordner, Yuen Lau, and Wesley Newsome, and the
 Uribe-Romo lab.
 
-\bibliographystyle{apalike}
+\bibliographystyle{IEEEtran}
 \bibliography{references}
 
 \end{document}
