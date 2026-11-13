@@ -20,6 +20,7 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{array}
 \usepackage[table]{xcolor}
 \usepackage[caption=false,font=footnotesize]{subfig}
 \usepackage{url}
@@ -387,24 +388,26 @@ follows:
 \end{itemize}
 
 % ADDED (comments [9]-[11]):
-\begin{table*}[t]
+\begin{table}[!t]
   \centering
   \caption{Reference values used to scale each raw measurement to 0--1. All
   were chosen by judgement.}
   \label{tab:reference}
-  \small
-  \begin{tabular}{@{}lll@{}}
+  \footnotesize
+  \setlength{\tabcolsep}{3pt}
+  \renewcommand{\arraystretch}{1.15}
+  \begin{tabular}{@{}>{\raggedright\arraybackslash}p{2.1cm}>{\raggedright\arraybackslash}p{2.9cm}>{\raggedright\arraybackslash}p{3.3cm}@{}}
     \toprule
     Metric or term & Raw measurement & Reference value \\
     \midrule
     $b$ & Standard deviation of baseline angles, $\sigma_\theta$ & $15^\circ$ ($b = 0$ at or above) \\
     $s$ & Variance of band spacing & $H^2/16$ (standard deviation of 495 px) \\
     $f$: component density & Components per ink pixel & $\times 40$, capped at 1 \\
-    $f$: nearest neighbor distance & Mean distance to nearest component & $\sqrt{\text{page area}}$ (1697 px) \\
+    $f$: nearest neighbor distance & Mean distance to nearest component & Square root of page area (1697 px) \\
     $f$: small component ratio & Share of components under 150 px & None (already a proportion) \\
     \bottomrule
   \end{tabular}
-\end{table*}
+\end{table}
 
 \subsection{Combined Readability Score}
 
@@ -422,15 +425,17 @@ in Table~\ref{tab:bands}.
 The cut-offs at 0.80 and 0.50 were chosen by judgement and apply to each metric
 and to the combined score.
 
-\begin{table*}[t]
+\begin{table}[!t]
   \centering
   \caption{The final combined score using the weighted formula of
   $0.40b + 0.20s + 0.40f$ results in a 0--1 score. For each metric and the
   combined score, High is defined as 0.80 and above, Moderate 0.50 to 0.79, and
   Low below 0.50.}
   \label{tab:bands}
-  \small
-  \begin{tabular}{@{}llll@{}}
+  \footnotesize
+  \setlength{\tabcolsep}{3pt}
+  \renewcommand{\arraystretch}{1.15}
+  \begin{tabular}{@{}l>{\raggedright\arraybackslash}p{1.45cm}>{\raggedright\arraybackslash}p{1.55cm}>{\raggedright\arraybackslash}p{2.6cm}@{}}
     \toprule
     Score & Baseline Consistency & Spatial Organization & Text Fragmentation \\
     \midrule
@@ -442,7 +447,7 @@ and to the combined score.
     0.00--0.49 & Low      & Low      & High Fragmentation (\emph{Low Readability}) \\
     \bottomrule
   \end{tabular}
-\end{table*}
+\end{table}
 % Comments [21]-[22]: caption changed from "High Baseline consistency is
 % defined as" to "For each metric and the combined score, High is defined as",
 % since the bands apply to every metric. GRAMMAR: removed the comma before
