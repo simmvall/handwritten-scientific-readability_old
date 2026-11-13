@@ -3,7 +3,7 @@
 %
 % Section 1: references already in the Word draft (corrected where noted).
 % Section 2: new sources for the spots tagged for citations.
-% Software/documentation entries use @misc with a url and urldate.
+% Software and documentation entries are misc entries with a url.
 
 % ---------------------------------------------------------------------------
 % 1. Existing references
@@ -78,35 +78,40 @@
   author       = {{Tesseract OCR}},
   title        = {Tesseract User Manual},
   howpublished = {\url{https://tesseract-ocr.github.io/tessdoc/}},
-  note         = {Accessed 2026-11-10}
+  note         = {Accessed 2026-11-10},
+  year         = {n.d.}
 }
 
 @misc{opencv_misc_transforms,
   author       = {{OpenCV}},
   title        = {Miscellaneous Image Transformations (adaptiveThreshold)},
   howpublished = {\url{https://docs.opencv.org/4.x/d7/d1b/group__imgproc__misc.html}},
-  note         = {OpenCV 4.x documentation. Accessed 2026-11-10}
+  note         = {OpenCV 4.x documentation. Accessed 2026-11-10},
+  year         = {n.d.}
 }
 
 @misc{pytesseract,
   author       = {{Madmaze}},
   title        = {pytesseract: A {Python} Wrapper for {Google} {Tesseract-OCR}},
   howpublished = {\url{https://github.com/madmaze/pytesseract}},
-  note         = {Source code. Accessed 2026-11-10}
+  note         = {Source code. Accessed 2026-11-10},
+  year         = {n.d.}
 }
 
 @misc{opencv_shape,
   author       = {{OpenCV}},
   title        = {Structural Analysis and Shape Descriptors (connectedComponentsWithStats, fitLine)},
   howpublished = {\url{https://docs.opencv.org/4.x/d3/dc0/group__imgproc__shape.html}},
-  note         = {OpenCV 4.x documentation. Accessed 2026-11-10}
+  note         = {OpenCV 4.x documentation. Accessed 2026-11-10},
+  year         = {n.d.}
 }
 
 @misc{jiwer,
   author       = {{JiWER contributors}},
   title        = {{JiWER}: Evaluate Your Speech-to-Text System with Similarity Measures such as Word Error Rate ({WER})},
   howpublished = {\url{https://github.com/jitsi/jiwer}},
-  note         = {Source code. Accessed 2026-11-10}
+  note         = {Source code. Accessed 2026-11-10},
+  year         = {n.d.}
 }
 
 @inproceedings{smith2007tesseract,
@@ -216,7 +221,8 @@
   author       = {{OpenCV}},
   title        = {Image Filtering (GaussianBlur, morphologyEx)},
   howpublished = {\url{https://docs.opencv.org/4.x/d4/d86/group__imgproc__filter.html}},
-  note         = {OpenCV 4.x documentation. Accessed 2026-11-10}
+  note         = {OpenCV 4.x documentation. Accessed 2026-11-10},
+  year         = {n.d.}
 }
 
 % Morphological opening and closing.
@@ -244,7 +250,8 @@
   author       = {{OpenCV}},
   title        = {Morphological Transformations (Python tutorial)},
   howpublished = {\url{https://docs.opencv.org/4.x/d9/d61/tutorial_py_morphological_ops.html}},
-  note         = {OpenCV 4.x documentation. Accessed 2026-11-10}
+  note         = {OpenCV 4.x documentation. Accessed 2026-11-10},
+  year         = {n.d.}
 }
 
 % Baseline / projection profile / text-line segmentation.
@@ -294,4 +301,39 @@
   pages     = {723--727},
   publisher = {IEEE},
   doi       = {10.1109/ICDAR.2013.148}
+}
+
+% ---------------------------------------------------------------------------
+% 3. Added in the second revision (claims that still lacked citations)
+% ---------------------------------------------------------------------------
+
+% Edit distance underlying CER.
+@article{levenshtein1966binary,
+  author  = {Levenshtein, Vladimir I.},
+  title   = {Binary Codes Capable of Correcting Deletions, Insertions, and Reversals},
+  journal = {Soviet Physics Doklady},
+  year    = {1966},
+  volume  = {10},
+  number  = {8},
+  pages   = {707--710}
+}
+
+% The OpenCV library itself (the citation OpenCV asks users to give).
+@article{bradski2000opencv,
+  author  = {Bradski, Gary},
+  title   = {The {OpenCV} Library},
+  journal = {Dr. Dobb's Journal of Software Tools},
+  year    = {2000}
+}
+
+% Canny edge map shown in Fig. 3(c).
+@article{canny1986edge,
+  author  = {Canny, John},
+  title   = {A Computational Approach to Edge Detection},
+  journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  year    = {1986},
+  volume  = {PAMI-8},
+  number  = {6},
+  pages   = {679--698},
+  doi     = {10.1109/TPAMI.1986.4767851}
 }
