@@ -49,8 +49,8 @@ handwritten scientific documents, with a preliminary implementation and
 evaluation of a quantitative readability score. The approach uses three
 computational metrics to score the baseline consistency, spatial organization,
 and text fragmentation of a page from each of the three chosen handwritten
-chemistry student lab notebooks from students studying MOFs (Metal Organic
-Frameworks). These notebooks are categorized as having neat, average, and messy
+chemistry student lab notebooks from students studying reticular materials like MOFs (Metal Organic
+Frameworks) and COFs (Covalent Organic Frameworks). These notebooks are categorized as having neat, average, and messy
 handwriting styles and scored on a scale from 0 (low readability) to 1 (high
 readability). The resulting score is then compared to transcription accuracy,
 measured as character error rate (CER), which is manually determined through
@@ -486,14 +486,12 @@ consistency.
 
 It is also surprising to find that OCR confidence scores can be overstated by
 the tool itself. Our results found that the page which was judged by researchers as
-'neat' handwriting had the lowest confidence but conversely, the lowest error.
-Additionally, the average handwriting page was ranked as the highest
+'neat' handwriting had the lowest confidence score but conversely, the lowest error.
+Additionally, the 'average' handwriting page was ranked as the highest
 confidence, but had the second highest error (75.6\%). This suggests that
 OCR-determined confidence scores alone may not reliably predict or reflect
 transcription accuracy, and should be assessed carefully when being used to
-predict the truth of document readability.
-
-With three pages, however, this is an observation rather than a finding.
+predict the truth of document readability. With three pages, however, this is an observation rather than a finding.
 
 This study has three limitations: small sample size, judgement-based weighting,
 and the use of one OCR tool. First, we tested the methods to obtain a
@@ -503,7 +501,7 @@ early attempt at the approach. Second, the weights and values were based on
 heuristic scaling; human judgement was used to determine which metrics should
 receive higher weight in the readability evaluation. Lastly, the transcription
 software Tesseract produced high error rates in transcription. Even for the
-notebook pages determined to be neat, both by our visual judgement and by the
+notebook pages determined to be 'neat', both by our visual judgement and by the
 combined readability score, error rates were high. This finding suggests that
 future work may benefit from the use of multiple transcription tools for
 comparison.
@@ -547,7 +545,6 @@ Institute for Data-Driven Dynamical Design, OAC-2118201, and the Drexel
 University Metadata Research Center. We acknowledge the original authors of the
 lab notebooks, Alyssa Bordner, Yuen Lau, and Wesley Newsome, and the
 Uribe-Romo lab.
-
 
 %%%%%%%%%%%%%%%%%%%
 \begin{thebibliography}{00}
